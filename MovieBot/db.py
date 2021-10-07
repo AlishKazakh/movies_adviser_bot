@@ -3,20 +3,20 @@ from typing import Dict, List, Tuple
 import sqlite3
 import pandas as pd
 
-directory = "MovieBot/dataset"
+directory = "/dataset"
 pd_df = pd.DataFrame()
-ds_store_file_location = 'MovieBot/dataset/.DS_store'
+ds_store_file_location = '/dataset/.DS_store'
 if os.path.isfile(ds_store_file_location):
     os.remove(ds_store_file_location)
 for i in range(len(os.listdir(directory))):
-    df_tmp = pd.read_excel(os.path.join(directory, "movies_data_set_{}.xlsx".format(i+1)), engine='openpyxl', index_col=0)
+    df_tmp = pd.read_excel("/dataset/movies_data_set_{}.xlsx".format(i+1), engine='openpyxl', index_col=0)
     pd_df = pd_df.append(df_tmp, ignore_index = True)
 pd_df = pd_df.rename(columns={"director":"directors", "genre":"genres", "name_rus":"movie_name_rus", "name_eng":"movie_name_eng", "year":"movie_year", "duration":"movie_duration", "imdb_rating":"movie_rating", "description":"movie_description_eng"})
 #pd_df = pd.read_excel(os.path.join(directory, "movies_data_set_all.xlsx"), engine='openpyxl', index_col=0)
 pd_df.dropna(axis=0,how='all',inplace=True)
 
 
-conn = sqlite3.connect("/Users/alish/Documents/Telegram/MovieBot/db/imdb.db", check_same_thread=False)
+conn = sqlite3.connect("/db/imdb.db", check_same_thread=False)
 cursor = conn.cursor()
 
 def insert_act_dir(table):
@@ -124,7 +124,7 @@ def get_cursor():
 
 def _init_db():
     """Инициализирует БД"""
-    with open("/Users/alish/Documents/Telegram/MovieBot/createdb.sql", "r") as f:
+    with open("/createdb.sql", "r") as f:
         sql = f.read()
     cursor.executescript(sql)
     insert_act_dir("actors")
@@ -147,13 +147,3 @@ def check_db_exists():
     _init_db()
 
 check_db_exists()
-
-# print("Movie_Actor")
-# for row in cursor.execute("SELECT * FROM Movie_Actor where movie_id<100"):
-#     print(row)
-# print("Movie_Director")
-# for row in cursor.execute("SELECT * FROM Movie_Director where movie_id<100"):
-#     print(row)
-# print("Movie_Genre")
-# for row in cursor.execute("SELECT * FROM Movie_Genre where movie_id<100"):
-#     print(row)

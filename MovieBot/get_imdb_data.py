@@ -224,21 +224,4 @@ def get_movie_images():
     #print(table_eng.find('img')['loadlate'])
 
 
-movie_year = [int(a[0]) for a in db.fetchall('movies',['movie_year'])]
-#print(min(movie_year))
-
-periods = np.linspace(min(movie_year),max(movie_year),num=10,dtype=int)
-print(periods)
-a = []
-for i in range(len(periods)):
-    try:
-        if i == 0:
-            a.append("{}-{}".format(periods[i],periods[i+1]))
-        else:
-            a.append("{}-{}".format(periods[i]+1,periods[i+1]))
-    except:
-        continue
-print(a)
-
-
 
